@@ -51,6 +51,7 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventConstants;
 import org.osgi.service.event.EventHandler;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,6 +97,7 @@ import java.util.regex.Pattern;
 EventConstants.EVENT_TOPIC  + "=" +  "com/adobe/granite/ui/librarymanager/INVALIDATED",
 "jmx.objectname" + "=" + "com.adobe.acs.commons.rewriter:type=VersionedClientlibsTransformerMd5Cache"
 })
+@Designate(ocd = VersionedClientlibsTransformerFactory.Config.class)
 public final class VersionedClientlibsTransformerFactory extends AbstractGuavaCacheMBean<VersionedClientLibraryMd5CacheKey, String> implements TransformerFactory, EventHandler, CacheMBean {
 
     private static final Logger log = LoggerFactory.getLogger(VersionedClientlibsTransformerFactory.class);

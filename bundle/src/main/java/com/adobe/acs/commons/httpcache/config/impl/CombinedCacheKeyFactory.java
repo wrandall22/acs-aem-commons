@@ -68,7 +68,7 @@ import java.util.Map;
         }
 
 )
-@Designate(ocd = CombinedCacheConfigExtension.Config.class, factory = true)
+@Designate(ocd = CombinedCacheKeyFactory.Config.class, factory = true)
 public class CombinedCacheKeyFactory implements CacheKeyFactory {
 
 

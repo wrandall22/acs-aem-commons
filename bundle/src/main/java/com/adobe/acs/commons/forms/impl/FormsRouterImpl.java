@@ -26,6 +26,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.ConfigurationPolicy;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.Designate;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ import com.adobe.acs.commons.forms.FormsRouter;
 import com.adobe.acs.commons.util.PathInfoUtil;
 
 @Component(service=FormsRouter.class, configurationPolicy=ConfigurationPolicy.REQUIRE)
+@Designate(ocd=FormsRouterImpl.Config.class)
 public class FormsRouterImpl implements FormsRouter {
     private static final Logger log = LoggerFactory.getLogger(FormsRouterImpl.class);
 
