@@ -51,8 +51,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 public abstract class AssetIngestor extends ProcessDefinition {
 
@@ -96,9 +95,10 @@ public abstract class AssetIngestor extends ProcessDefinition {
     @FormField(
             name = "Dry run",
             description = "If checked, no import happens.  Useful for data validation",
-            component = CheckboxComponent.class
+            component = CheckboxComponent.class,
+            options = "checked"
     )
-    boolean dryRunMode = false;
+    boolean dryRunMode = true;
 
     @FormField(
             name = "Detailed report",
@@ -202,7 +202,7 @@ public abstract class AssetIngestor extends ProcessDefinition {
         item, action, description, count, @FieldFormat(ValueFormat.storageSize) bytes
     }
 
-    List<EnumMap<ReportColumns, Object>> reportRows;
+    private List<EnumMap<ReportColumns, Object>> reportRows;
 
     private synchronized EnumMap<ReportColumns, Object> trackActivity(String item, String action, String description, Long bytes) {
         if (reportRows == null) {
@@ -299,7 +299,6 @@ public abstract class AssetIngestor extends ProcessDefinition {
 
                 if (asset == null) {
                     AssetIngestorException ex = new AssetIngestorException("Cannot create asset: asset is null on path  " + assetPath);
-                    Logger.getLogger(AssetIngestor.class.getName()).log(Level.SEVERE, null, ex);
                     throw ex;
                 }
                 saveMigrationInfo(source, asset);
@@ -503,7 +502,7 @@ public abstract class AssetIngestor extends ProcessDefinition {
     private transient GenericReport report = new GenericReport();
 
     @Override
-    public void storeReport(ProcessInstance instance, ResourceResolver rr) throws RepositoryException, PersistenceException {
+    public synchronized void storeReport(ProcessInstance instance, ResourceResolver rr) throws RepositoryException, PersistenceException {
         report.setRows(reportRows, ReportColumns.class);
         report.persist(rr, instance.getPath() + "/jcr:content/report");
     }
