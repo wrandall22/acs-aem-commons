@@ -2,7 +2,7 @@
  * #%L
  * ACS AEM Commons Bundle
  * %%
- * Copyright (C) 2018 Adobe
+ * Copyright (C) 2016 Adobe
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,5 @@
  * limitations under the License.
  * #L%
  */
-/**
- * Data handling functions
- */
-@Version("2.2.0")
-package com.adobe.acs.commons.data;
-
-import org.osgi.annotation.versioning.Version;
+@org.osgi.annotation.versioning.Version("1.0.0")
+package com.adobe.acs.commons.granite.ui.components;
