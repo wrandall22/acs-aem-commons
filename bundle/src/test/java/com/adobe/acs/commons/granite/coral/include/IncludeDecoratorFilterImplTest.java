@@ -61,8 +61,8 @@ public class IncludeDecoratorFilterImplTest {
         when(parameterResource.getValueMap()).thenReturn(new ValueMapDecorator(parameters));
 
         doAnswer(invocationOnMock -> {
-            String key = invocationOnMock.getArgumentAt(0, String.class);
-            Object value = invocationOnMock.getArgumentAt(1, Object.class);
+            String key = invocationOnMock.getArgument(0, String.class);
+            Object value = invocationOnMock.getArgument(1, Object.class);
             currentRequestAttributes.put(key, value);
             return null;
         }).when(request).setAttribute(anyString(), any());
@@ -72,12 +72,12 @@ public class IncludeDecoratorFilterImplTest {
         );
 
         when(request.getAttribute(anyString())).thenAnswer(invocationOnMock -> {
-            String key = invocationOnMock.getArgumentAt(0, String.class);
+            String key = invocationOnMock.getArgument(0, String.class);
             return currentRequestAttributes.get(key);
         });
 
         doAnswer(invocationOnMock -> {
-            String key = invocationOnMock.getArgumentAt(0, String.class);
+            String key = invocationOnMock.getArgument(0, String.class);
             currentRequestAttributes.remove(key);
             return null;
         }).when(request).removeAttribute(anyString());
