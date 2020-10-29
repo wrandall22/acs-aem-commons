@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!-- ====================================================================== -->
+    <!-- P A R E N T P R O J E C T D E S C R I P T I O N -->
+    <!-- ====================================================================== -->
+    <parent>
+        <groupId>com.adobe.acs</groupId>
+        <artifactId>acs-aem-commons</artifactId>
+        <version>4.8.7-SNAPSHOT</version>
+    </parent>
+
+    <!-- ====================================================================== -->
+    <!-- P R O J E C T D E S C R I P T I O N -->
+    <!-- ====================================================================== -->
+
+    <artifactId>acs-aem-commons-ui.config</artifactId>
+    <name>ACS AEM Commons UI.Config Package</name>
+    <packaging>content-package</packaging>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/content/jcr_root</directory>
+                <excludes>
+                    <exclude>**/.vlt</exclude>
+                    <exclude>**/.vltignore</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/content/META-INF/vault/definition</directory>
+                <targetPath>../vault-work/META-INF/vault/definition</targetPath>
+            </resource>
+            <resource>
+                <directory>src/main/content/META-INF/vault</directory>
+                <includes>
+                    <include>nodetypes.cnd</include>
+                    <include>privileges.xml</include>
+                </includes>
+                <targetPath>../vault-work/META-INF/vault</targetPath>
+            </resource>
+            <resource>
+                <directory>src/main/resources/META-INF</directory>
+                <targetPath>../vault-work/META-INF</targetPath>
+            </resource>
+        </resources>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>${maven.multiModuleProjectDirectory}/src/test/resources</directory>
+            </testResource>
+        </testResources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <includeEmptyDirs>true</includeEmptyDirs>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.day.jcr.vault</groupId>
+                <artifactId>content-package-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <group>adobe/consulting</group>
+                    <properties>
+                        <description>ACS AEM Commons content package containing OSGI config (/apps).</description>
+                        <!-- overwrite rep:ACE nodes defining policies for acs-aem-commons-owned service principals -->
+                        <acHandling>merge</acHandling>
+                    </properties>
+                    <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
+                    <targetURL>http://${crx.host}:${crx.port}${crx.contextRoot}/crx/packmgr/service.jsp</targetURL>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.xml</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- configuration to create minimal package -->
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>gmaven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-min-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>${pom.basedir}/../content/src/main/script/CreateMinPackage.groovy</source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>attach-artifacts</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/${project.artifactId}-${project.version}-min.zip</file>
+                                    <type>zip</type>
+                                    <classifier>min</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <profiles>
+        <profile>
+            <id>autoInstallUiAppsPackage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.day.jcr.vault</groupId>
+                        <artifactId>content-package-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-content-package</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>install</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
