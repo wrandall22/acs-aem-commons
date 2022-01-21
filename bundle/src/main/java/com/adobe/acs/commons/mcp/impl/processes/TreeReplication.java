@@ -28,7 +28,7 @@ import com.adobe.acs.commons.mcp.form.FormField;
 import com.adobe.acs.commons.mcp.form.PathfieldComponent;
 import com.adobe.acs.commons.mcp.form.SelectComponent;
 import com.adobe.acs.commons.mcp.form.TextfieldComponent;
-import com.adobe.acs.commons.mcp.model.GenericReport;
+import com.adobe.acs.commons.mcp.model.GenericBlobReport;
 import com.adobe.acs.commons.util.visitors.TreeFilteringResourceVisitor;
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.replication.AgentFilter;
@@ -82,7 +82,7 @@ public class TreeReplication extends ProcessDefinition {
         PUBLISH, UNPUBLISH
     }
 
-    public static int ASYNC_LIMIT = 10000;
+    public static final int ASYNC_LIMIT = 10000;
 
     Replicator replicatorService;
 
@@ -173,7 +173,7 @@ public class TreeReplication extends ProcessDefinition {
 
     @Override
     public void storeReport(ProcessInstance instance, ResourceResolver rr) throws RepositoryException, PersistenceException {
-        GenericReport report = new GenericReport();
+        GenericBlobReport report = new GenericBlobReport();
         report.setName("Tree Replication " + startingPath);
         report.setRows(reportData, ReportColumns.class);
         report.persist(rr, instance.getPath() + "/jcr:content/report");
@@ -217,7 +217,7 @@ public class TreeReplication extends ProcessDefinition {
         t.deferredWithResolver(rr -> visitor.accept(rr.getResource(startingPath)));
     }
 
-    public AtomicInteger replicationCount = new AtomicInteger();
+    private final AtomicInteger replicationCount = new AtomicInteger();
 
     private void performReplication(ActionManager t, String path) {
         int counter = replicationCount.incrementAndGet();

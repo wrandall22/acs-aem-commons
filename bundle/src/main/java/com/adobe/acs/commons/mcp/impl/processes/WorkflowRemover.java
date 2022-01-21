@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.List;
@@ -46,7 +47,7 @@ import com.adobe.acs.commons.mcp.ProcessInstance;
 import com.adobe.acs.commons.mcp.form.DatePickerComponent;
 import com.adobe.acs.commons.mcp.form.FormField;
 import com.adobe.acs.commons.mcp.form.MultifieldComponent;
-import com.adobe.acs.commons.mcp.model.GenericReport;
+import com.adobe.acs.commons.mcp.model.GenericBlobReport;
 import com.adobe.acs.commons.workflow.bulk.removal.WorkflowInstanceRemover;
 import com.adobe.acs.commons.workflow.bulk.removal.WorkflowRemovalStatus;
 
@@ -61,7 +62,7 @@ public class WorkflowRemover extends ProcessDefinition {
 
     private final WorkflowInstanceRemover workflowInstanceRemover;
 
-    private final transient GenericReport report = new GenericReport();
+    private final transient GenericBlobReport report = new GenericBlobReport();
     private final transient List<EnumMap<ReportColumns, Object>> reportRows = new ArrayList<>();
 
     @FormField(name = "Workflow Payload Paths", description = "Payload path regex", hint = "/content/dam/.*",
@@ -187,11 +188,11 @@ public class WorkflowRemover extends ProcessDefinition {
     }
 
     public List<String> getModelIds() {
-        return modelIds;
+        return Collections.unmodifiableList(modelIds);
     }
 
     public List<Pattern> getPayloads() {
-        return payloads;
+        return Collections.unmodifiableList(payloads);
     }
 
     public Calendar getOlderThan() {
@@ -203,7 +204,7 @@ public class WorkflowRemover extends ProcessDefinition {
     }
 
     public List<String> getStatuses() {
-        return statuses;
+        return Collections.unmodifiableList(statuses);
     }
 
     public WorkflowRemovalConfig getWorkflowRemovalConfig() {
